@@ -28,6 +28,8 @@ var main = function (pipeline) {
 	requestAnimationFrame(frame);
 };
 
+module.exports = main;
+
 /*
 main([function () {
 	console.log('tick');
