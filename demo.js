@@ -12,7 +12,7 @@
 		position: {
 			x: canvas.h / 2, y: canvas.w / 2
 		},
-		input: false,
+		input: true,
 		size: {
 			h: 10, w: 10
 		}

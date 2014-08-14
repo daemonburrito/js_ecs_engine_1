@@ -35,7 +35,7 @@
 		position: {
 			x: canvas.h / 2, y: canvas.w / 2
 		},
-		input: false,
+		input: true,
 		size: {
 			h: 10, w: 10
 		}
@@ -80,6 +80,41 @@
 	module.exports = {
 		Entity: Entity
 	};
+})();
+
+},{}],"/home/scott/projects/gamedev/src/js_engine_1/key_poller.js":[function(require,module,exports){
+// Key polling module.
+// Ask for keycode to get state.
+(function () {
+	"use strict";
+
+	var el = document,
+		keys_down = {}; // for now, just listen to the root
+
+	el.addEventListener('keydown', function (ev) {
+		//console.log(ev.keyCode);
+		keys_down[ev.keyCode] = true;
+	});
+
+	el.addEventListener('keyup', function (ev) {
+		try {
+			delete keys_down[ev.keyCode];
+		}
+		catch (e) {} // it's okay if the key wasn't in keys_down
+	});
+
+	var poller = {
+		pressed: function (keycode) {
+			if (keys_down[keycode] === true) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+	};
+
+	module.exports = poller;
 })();
 
 },{}],"/home/scott/projects/gamedev/src/js_engine_1/keys.js":[function(require,module,exports){
@@ -1296,11 +1331,13 @@ module.exports = main;
 (function () {
 	"use strict";
 	var canvas = require('./canvas'),
+		keys = require('./keys'),
+		keypoller = require('./key_poller'),
 
 	systems = {
 		render: function (entities) {
 			var aspects = ['appearance'];
-
+			canvas.ctx.clearRect(0, 0, canvas.h, canvas.w);
 			entities.forEach(function (entity) {
 				if (entity.components.size && entity.components.position) {
 					canvas.ctx.fillRect(
@@ -1316,7 +1353,28 @@ module.exports = main;
 			var aspects = ['controlled'];
 
 			entities.forEach(function (entity) {
+				if (entity.components.input && entity.components.position) {
+					var up = keypoller.pressed(keys.UP),
+						down = keypoller.pressed(keys.DOWN),
+						left = keypoller.pressed(keys.LEFT),
+						right = keypoller.pressed(keys.RIGHT);
 
+					if (up) {
+						entity.components.position.y += -1;
+					}
+
+					if (down) {
+						entity.components.position.y += 1;
+					}
+
+					if (left) {
+						entity.components.position.x += -1;
+					}
+
+					if (right) {
+						entity.components.position.x += 1;
+					}
+				}
 			}, this);
 		},
 
@@ -1334,7 +1392,7 @@ module.exports = main;
 	module.exports = systems;
 })();
 
-},{"./canvas":"/home/scott/projects/gamedev/src/js_engine_1/canvas.js"}],"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
+},{"./canvas":"/home/scott/projects/gamedev/src/js_engine_1/canvas.js","./key_poller":"/home/scott/projects/gamedev/src/js_engine_1/key_poller.js","./keys":"/home/scott/projects/gamedev/src/js_engine_1/keys.js"}],"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
