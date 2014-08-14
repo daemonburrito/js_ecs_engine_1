@@ -4,6 +4,7 @@ var main = function (pipeline, async_pipeline) {
 	"use strict";
 	var now, dt, last, context,
 		async = require('async'),
+		keys = require('./keys'),
 
 		// raf cb
 		frame = function () {
@@ -12,15 +13,19 @@ var main = function (pipeline, async_pipeline) {
 			dt = (now - last) / 1000,
 
 			context = {
-				dt: dt
+				dt: dt,
+				now: now,
+				last: last
 			};
 
+			// sync pipeline
+			// calls in this queue are in a series, and a done() callback must be fired.
 			async.series(pipeline.map(function (fn) {
 				return fn.bind(context);
 			}));
 
 			// async pipeline
-			// calls in this queue do not need a next(), but will not block eachother.
+			// calls in this queue do not need a done(), but will not block eachother.
 			async_pipeline.forEach(function (fn) {
 				fn.call(context);
 			}, this);

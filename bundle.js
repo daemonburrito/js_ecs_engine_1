@@ -1,41 +1,57 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/scott/projects/gamedev/src/js_engine_1/demo.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/scott/projects/gamedev/src/js_engine_1/canvas.js":[function(require,module,exports){
+(function () {
+	"use strict";
+	const CANVAS_H = 500,
+		CANVAS_W = 500;
+
+	var el = document.getElementById('demo'),
+		ctx = el.getContext('2d');
+
+	el.height = CANVAS_H;
+	el.width = CANVAS_W;
+	ctx.fillStyle = '#FF0000';
+	ctx.strokeStyle = '#000000';
+
+	module.exports = {
+		el: el,
+		ctx: ctx,
+		h: CANVAS_H,
+		w: CANVAS_W
+	};
+})();
+
+},{}],"/home/scott/projects/gamedev/src/js_engine_1/demo.js":[function(require,module,exports){
 (function () {
 	"use strict";
 	var main = require('./main.js'),
-		canvas = document.getElementById('demo'),
-		ctx = canvas.getContext('2d');
+		ecs = require('./ecs'),
+		systems = require('./systems'),
+		canvas = require('./canvas'),
+		entities = [];
 
-	ctx.fillStyle = '#FF0000';
-	ctx.strokeStyle = '#000000';
+	var player = new ecs.Entity('player');
+
+	player.components = {
+		position: {
+			x: canvas.h / 2, y: canvas.w / 2
+		},
+		input: false,
+		size: {
+			h: 10, w: 10
+		}
+	}
+
+	entities.push(player);
 
 	var x = 0, y = 0,
 		forward = true;
 
-	ctx.fillRect(x, y, 10, 10);
-
 	var sync_fns = [
-		function (cb) {
-			ctx.clearRect(0, 0, 300, 300);
-			cb();
-		},
-		function (cb) {
-			if (x === 0) {
-				forward = true;
-			}
-
-			if (x < 290 && forward === true) {
-				x += 1;
-				y += 1;
-			}
-			else {
-				forward = false;
-				x -= 1;
-				y -= 1;
-			}
-
-			ctx.fillRect(x, y, 10, 10);
-
-			cb();
+		function (done) {
+			Object.keys(systems).forEach(function (key) {
+				systems[key].call(this, entities);
+			});
+			done();
 		}
 	];
 
@@ -45,13 +61,65 @@
 	}]);
 })();
 
-},{"./main.js":"/home/scott/projects/gamedev/src/js_engine_1/main.js"}],"/home/scott/projects/gamedev/src/js_engine_1/main.js":[function(require,module,exports){
+},{"./canvas":"/home/scott/projects/gamedev/src/js_engine_1/canvas.js","./ecs":"/home/scott/projects/gamedev/src/js_engine_1/ecs.js","./main.js":"/home/scott/projects/gamedev/src/js_engine_1/main.js","./systems":"/home/scott/projects/gamedev/src/js_engine_1/systems.js"}],"/home/scott/projects/gamedev/src/js_engine_1/ecs.js":[function(require,module,exports){
+// entity-component-system
+(function () {
+	"use strict";
+
+	var Entity = function (name) {
+		// "name" is for debugging, remove for performance.
+		if (name) {
+			this.name = name;
+		}
+
+		this.components = {};
+
+		return this;
+	};
+
+	module.exports = {
+		Entity: Entity
+	};
+})();
+
+},{}],"/home/scott/projects/gamedev/src/js_engine_1/keys.js":[function(require,module,exports){
+const KEY = {
+	BACKSPACE: 8,
+	TAB: 9,
+	RETURN: 13,
+	ESC: 27,
+	SPACE: 32,
+	PAGEUP: 33,
+	PAGEDOWN: 34,
+	END: 35,
+	HOME: 36,
+	LEFT: 37,
+	UP: 38,
+	RIGHT: 39,
+	DOWN: 40,
+	INSERT: 45,
+	DELETE: 46,
+
+	ZERO: 48, ONE: 49, TWO: 50, THREE: 51, FOUR: 52, FIVE: 53, SIX: 54, SEVEN: 55,
+	EIGHT: 56, NINE: 57,
+
+	A: 65, B: 66, C: 67, D: 68, E: 69, F: 70, G: 71, H: 72, I: 73, J: 74, K: 75,
+	L: 76, M: 77, N: 78, O: 79, P: 80, Q: 81, R: 82, S: 83, T: 84, U: 85, V: 86,
+	W: 87, X: 88, Y: 89, Z: 90, 
+
+	TILDA: 192
+};
+
+module.exports = KEY;
+
+},{}],"/home/scott/projects/gamedev/src/js_engine_1/main.js":[function(require,module,exports){
 // main module
 // game loop, asset loading, etc
 var main = function (pipeline, async_pipeline) {
 	"use strict";
 	var now, dt, last, context,
 		async = require('async'),
+		keys = require('./keys'),
 
 		// raf cb
 		frame = function () {
@@ -60,15 +128,19 @@ var main = function (pipeline, async_pipeline) {
 			dt = (now - last) / 1000,
 
 			context = {
-				dt: dt
+				dt: dt,
+				now: now,
+				last: last
 			};
 
+			// sync pipeline
+			// calls in this queue are in a series, and a done() callback must be fired.
 			async.series(pipeline.map(function (fn) {
 				return fn.bind(context);
 			}));
 
 			// async pipeline
-			// calls in this queue do not need a next(), but will not block eachother.
+			// calls in this queue do not need a done(), but will not block eachother.
 			async_pipeline.forEach(function (fn) {
 				fn.call(context);
 			}, this);
@@ -92,7 +164,7 @@ var main = function (pipeline, async_pipeline) {
 
 module.exports = main;
 
-},{"async":"/home/scott/projects/gamedev/src/js_engine_1/node_modules/async/lib/async.js"}],"/home/scott/projects/gamedev/src/js_engine_1/node_modules/async/lib/async.js":[function(require,module,exports){
+},{"./keys":"/home/scott/projects/gamedev/src/js_engine_1/keys.js","async":"/home/scott/projects/gamedev/src/js_engine_1/node_modules/async/lib/async.js"}],"/home/scott/projects/gamedev/src/js_engine_1/node_modules/async/lib/async.js":[function(require,module,exports){
 (function (process){
 /*!
  * async
@@ -1219,7 +1291,50 @@ module.exports = main;
 }());
 
 }).call(this,require('_process'))
-},{"_process":"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js"}],"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
+},{"_process":"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js"}],"/home/scott/projects/gamedev/src/js_engine_1/systems.js":[function(require,module,exports){
+// systems
+(function () {
+	"use strict";
+	var canvas = require('./canvas'),
+
+	systems = {
+		render: function (entities) {
+			var aspects = ['appearance'];
+
+			entities.forEach(function (entity) {
+				if (entity.components.size && entity.components.position) {
+					canvas.ctx.fillRect(
+						entity.components.position.x,
+						entity.components.position.y,
+						entity.components.size.h,
+						entity.components.size.w);
+				}
+			}), this;
+		},
+
+		input: function (entities) {
+			var aspects = ['controlled'];
+
+			entities.forEach(function (entity) {
+
+			}, this);
+		},
+
+		position: function (entities) {
+			var aspects = ['moves'];
+
+			entities.forEach(function (entity) {
+
+			}, this);
+		},
+
+
+	};
+
+	module.exports = systems;
+})();
+
+},{"./canvas":"/home/scott/projects/gamedev/src/js_engine_1/canvas.js"}],"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

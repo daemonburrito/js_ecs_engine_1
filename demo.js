@@ -1,40 +1,34 @@
 (function () {
 	"use strict";
 	var main = require('./main.js'),
-		canvas = document.getElementById('demo'),
-		ctx = canvas.getContext('2d');
+		ecs = require('./ecs'),
+		systems = require('./systems'),
+		canvas = require('./canvas'),
+		entities = [];
 
-	ctx.fillStyle = '#FF0000';
-	ctx.strokeStyle = '#000000';
+	var player = new ecs.Entity('player');
+
+	player.components = {
+		position: {
+			x: canvas.h / 2, y: canvas.w / 2
+		},
+		input: false,
+		size: {
+			h: 10, w: 10
+		}
+	}
+
+	entities.push(player);
 
 	var x = 0, y = 0,
 		forward = true;
 
-	ctx.fillRect(x, y, 10, 10);
-
 	var sync_fns = [
-		function (cb) {
-			ctx.clearRect(0, 0, 300, 300);
-			cb();
-		},
-		function (cb) {
-			if (x === 0) {
-				forward = true;
-			}
-
-			if (x < 290 && forward === true) {
-				x += 1;
-				y += 1;
-			}
-			else {
-				forward = false;
-				x -= 1;
-				y -= 1;
-			}
-
-			ctx.fillRect(x, y, 10, 10);
-
-			cb();
+		function (done) {
+			Object.keys(systems).forEach(function (key) {
+				systems[key].call(this, entities);
+			});
+			done();
 		}
 	];
 
