@@ -6,11 +6,22 @@
 		keypoller = require('./key_poller'),
 
 	systems = {
-		render: function (entities) {
-			var aspects = ['appearance'];
-			canvas.ctx.clearRect(0, 0, canvas.h, canvas.w);
+		sprite: function (entities) {
 			entities.forEach(function (entity) {
-				if (entity.components.size && entity.components.position) {
+				if (entity.components.sprite) {
+					// entity.components.sprite.sheet
+					// entity.components.sprite.offset.x
+					// entity.components.sprite.offset.y
+				}
+			});
+		},
+
+		render: function (entities) {
+			canvas.ctx.clearRect(0, 0, canvas.h, canvas.w);
+
+			entities.forEach(function (entity) {
+				if (entity.components.size && entity.components.position 
+					&& !entity.components.sprite) {
 					canvas.ctx.fillRect(
 						entity.components.position.x,
 						entity.components.position.y,
@@ -21,8 +32,6 @@
 		},
 
 		input: function (entities) {
-			var aspects = ['controlled'];
-
 			entities.forEach(function (entity) {
 				if (entity.components.input && entity.components.position) {
 					var up = keypoller.pressed(keys.UP),
@@ -50,8 +59,6 @@
 		},
 
 		position: function (entities) {
-			var aspects = ['moves'];
-
 			entities.forEach(function (entity) {
 
 			}, this);

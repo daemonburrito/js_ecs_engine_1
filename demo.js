@@ -15,6 +15,12 @@
 		input: true,
 		size: {
 			h: 10, w: 10
+		},
+		sprite: {
+			sheet: '',
+			offset: {
+				x: 0, y:0
+			}
 		}
 	}
 
