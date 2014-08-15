@@ -6,7 +6,10 @@
 		canvas = require('./canvas'),
 		entities = [];
 
-	var player = new ecs.Entity('player');
+	var player = new ecs.Entity('player'),
+		spritesheet = new Image();
+
+	spritesheet.src = 'russpuppy.com-rpg.png';
 
 	player.components = {
 		position: {
@@ -17,10 +20,11 @@
 			h: 10, w: 10
 		},
 		sprite: {
-			sheet: '',
+			sheet: spritesheet,
 			offset: {
-				x: 0, y:0
-			}
+				x: 2 * 16, y: 7 * 16
+			},
+			h: 16, w: 16
 		}
 	}
 
@@ -38,8 +42,10 @@
 		}
 	];
 
-	main(sync_fns, [function () {
-		//console.log('tick');
-		//console.log('dt', this.dt);
-	}]);
+	spritesheet.addEventListener('load', function () {
+		main(sync_fns, [function () {
+			//console.log('tick');
+			//console.log('dt', this.dt);
+		}]);
+	}, false);
 })();

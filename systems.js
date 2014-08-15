@@ -4,18 +4,9 @@
 	var canvas = require('./canvas'),
 		keys = require('./keys'),
 		keypoller = require('./key_poller'),
+		sprite_util = require('./sprite'),
 
 	systems = {
-		sprite: function (entities) {
-			entities.forEach(function (entity) {
-				if (entity.components.sprite) {
-					// entity.components.sprite.sheet
-					// entity.components.sprite.offset.x
-					// entity.components.sprite.offset.y
-				}
-			});
-		},
-
 		render: function (entities) {
 			canvas.ctx.clearRect(0, 0, canvas.h, canvas.w);
 
@@ -29,6 +20,21 @@
 						entity.components.size.w);
 				}
 			}), this;
+		},
+
+		sprite: function (entities) {
+			entities.forEach(function (entity) {
+				if (entity.components.sprite) {
+					var sprite = sprite_util.get(canvas.ctx, entity.components.sprite.sheet,
+						entity.components.sprite.offset.x, entity.components.sprite.offset.y,
+						entity.components.sprite.h, entity.components.sprite.w);
+
+					if (entity.components.position) {
+						sprite.draw(entity.components.position.x,
+							entity.components.position.y);
+					}
+				}
+			});
 		},
 
 		input: function (entities) {

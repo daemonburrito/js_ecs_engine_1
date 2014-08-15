@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/scott/projects/gamedev/src/js_engine_1/canvas.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/home/scott/projects/gamedev/src/js_ecs_engine_1/canvas.js":[function(require,module,exports){
 (function () {
 	"use strict";
 	const CANVAS_H = 500,
@@ -20,7 +20,7 @@
 	};
 })();
 
-},{}],"/home/scott/projects/gamedev/src/js_engine_1/demo.js":[function(require,module,exports){
+},{}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/demo.js":[function(require,module,exports){
 (function () {
 	"use strict";
 	var main = require('./main.js'),
@@ -29,7 +29,10 @@
 		canvas = require('./canvas'),
 		entities = [];
 
-	var player = new ecs.Entity('player');
+	var player = new ecs.Entity('player'),
+		spritesheet = new Image();
+
+	spritesheet.src = 'russpuppy.com-rpg.png';
 
 	player.components = {
 		position: {
@@ -38,6 +41,13 @@
 		input: true,
 		size: {
 			h: 10, w: 10
+		},
+		sprite: {
+			sheet: spritesheet,
+			offset: {
+				x: 2 * 16, y: 7 * 16
+			},
+			h: 16, w: 16
 		}
 	}
 
@@ -55,13 +65,15 @@
 		}
 	];
 
-	main(sync_fns, [function () {
-		//console.log('tick');
-		//console.log('dt', this.dt);
-	}]);
+	spritesheet.addEventListener('load', function () {
+		main(sync_fns, [function () {
+			//console.log('tick');
+			//console.log('dt', this.dt);
+		}]);
+	}, false);
 })();
 
-},{"./canvas":"/home/scott/projects/gamedev/src/js_engine_1/canvas.js","./ecs":"/home/scott/projects/gamedev/src/js_engine_1/ecs.js","./main.js":"/home/scott/projects/gamedev/src/js_engine_1/main.js","./systems":"/home/scott/projects/gamedev/src/js_engine_1/systems.js"}],"/home/scott/projects/gamedev/src/js_engine_1/ecs.js":[function(require,module,exports){
+},{"./canvas":"/home/scott/projects/gamedev/src/js_ecs_engine_1/canvas.js","./ecs":"/home/scott/projects/gamedev/src/js_ecs_engine_1/ecs.js","./main.js":"/home/scott/projects/gamedev/src/js_ecs_engine_1/main.js","./systems":"/home/scott/projects/gamedev/src/js_ecs_engine_1/systems.js"}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/ecs.js":[function(require,module,exports){
 // entity-component-system
 (function () {
 	"use strict";
@@ -82,7 +94,7 @@
 	};
 })();
 
-},{}],"/home/scott/projects/gamedev/src/js_engine_1/key_poller.js":[function(require,module,exports){
+},{}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/key_poller.js":[function(require,module,exports){
 // Key polling module.
 // Ask for keycode to get state.
 (function () {
@@ -117,7 +129,7 @@
 	module.exports = poller;
 })();
 
-},{}],"/home/scott/projects/gamedev/src/js_engine_1/keys.js":[function(require,module,exports){
+},{}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/keys.js":[function(require,module,exports){
 const KEY = {
 	BACKSPACE: 8,
 	TAB: 9,
@@ -147,7 +159,7 @@ const KEY = {
 
 module.exports = KEY;
 
-},{}],"/home/scott/projects/gamedev/src/js_engine_1/main.js":[function(require,module,exports){
+},{}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/main.js":[function(require,module,exports){
 // main module
 // game loop, asset loading, etc
 var main = function (pipeline, async_pipeline) {
@@ -199,7 +211,7 @@ var main = function (pipeline, async_pipeline) {
 
 module.exports = main;
 
-},{"./keys":"/home/scott/projects/gamedev/src/js_engine_1/keys.js","async":"/home/scott/projects/gamedev/src/js_engine_1/node_modules/async/lib/async.js"}],"/home/scott/projects/gamedev/src/js_engine_1/node_modules/async/lib/async.js":[function(require,module,exports){
+},{"./keys":"/home/scott/projects/gamedev/src/js_ecs_engine_1/keys.js","async":"/home/scott/projects/gamedev/src/js_ecs_engine_1/node_modules/async/lib/async.js"}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/node_modules/async/lib/async.js":[function(require,module,exports){
 (function (process){
 /*!
  * async
@@ -1326,20 +1338,63 @@ module.exports = main;
 }());
 
 }).call(this,require('_process'))
-},{"_process":"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js"}],"/home/scott/projects/gamedev/src/js_engine_1/systems.js":[function(require,module,exports){
+},{"_process":"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js"}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/sprite.js":[function(require,module,exports){
+// sprite util
+(function () {
+	"use strict";
+	var Sprite = function (ctx, sheet, offset_x, offset_y, h, w) {
+		this.ctx = ctx;
+		this.sheet = sheet;
+		this.offset = {};
+		this.offset.x = offset_x;
+		this.offset.y = offset_y;
+		this.h = h;
+		this.w = w;
+
+		return this;
+	};
+
+	Sprite.prototype.draw = function (x, y) {
+		this.ctx.drawImage(this.sheet,
+			this.offset.x, this.offset.y,
+			this.w, this.h,
+			x, y,
+			this.w, this.h)
+	};
+
+	module.exports = {
+		cache: {},
+		get: function (ctx, sheet, offset_x, offset_y, h, w) {
+			var key = sheet + offset_x + offset_y,
+				cached = this.cache[key];
+
+			if (cached) {
+				return cached;
+			}
+			else {
+				this.cache[key] = new Sprite(ctx, sheet, offset_x, offset_y, h, w);
+				return this.cache[key];
+			}
+		}
+	};
+})();
+
+},{}],"/home/scott/projects/gamedev/src/js_ecs_engine_1/systems.js":[function(require,module,exports){
 // systems
 (function () {
 	"use strict";
 	var canvas = require('./canvas'),
 		keys = require('./keys'),
 		keypoller = require('./key_poller'),
+		sprite_util = require('./sprite'),
 
 	systems = {
 		render: function (entities) {
-			var aspects = ['appearance'];
 			canvas.ctx.clearRect(0, 0, canvas.h, canvas.w);
+
 			entities.forEach(function (entity) {
-				if (entity.components.size && entity.components.position) {
+				if (entity.components.size && entity.components.position 
+					&& !entity.components.sprite) {
 					canvas.ctx.fillRect(
 						entity.components.position.x,
 						entity.components.position.y,
@@ -1349,9 +1404,22 @@ module.exports = main;
 			}), this;
 		},
 
-		input: function (entities) {
-			var aspects = ['controlled'];
+		sprite: function (entities) {
+			entities.forEach(function (entity) {
+				if (entity.components.sprite) {
+					var sprite = sprite_util.get(canvas.ctx, entity.components.sprite.sheet,
+						entity.components.sprite.offset.x, entity.components.sprite.offset.y,
+						entity.components.sprite.h, entity.components.sprite.w);
 
+					if (entity.components.position) {
+						sprite.draw(entity.components.position.x,
+							entity.components.position.y);
+					}
+				}
+			});
+		},
+
+		input: function (entities) {
 			entities.forEach(function (entity) {
 				if (entity.components.input && entity.components.position) {
 					var up = keypoller.pressed(keys.UP),
@@ -1379,8 +1447,6 @@ module.exports = main;
 		},
 
 		position: function (entities) {
-			var aspects = ['moves'];
-
 			entities.forEach(function (entity) {
 
 			}, this);
@@ -1392,7 +1458,7 @@ module.exports = main;
 	module.exports = systems;
 })();
 
-},{"./canvas":"/home/scott/projects/gamedev/src/js_engine_1/canvas.js","./key_poller":"/home/scott/projects/gamedev/src/js_engine_1/key_poller.js","./keys":"/home/scott/projects/gamedev/src/js_engine_1/keys.js"}],"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
+},{"./canvas":"/home/scott/projects/gamedev/src/js_ecs_engine_1/canvas.js","./key_poller":"/home/scott/projects/gamedev/src/js_ecs_engine_1/key_poller.js","./keys":"/home/scott/projects/gamedev/src/js_ecs_engine_1/keys.js","./sprite":"/home/scott/projects/gamedev/src/js_ecs_engine_1/sprite.js"}],"/home/scott/projects/nodejs/lib/node_modules/watchify/node_modules/browserify/node_modules/process/browser.js":[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -1457,4 +1523,4 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}]},{},["/home/scott/projects/gamedev/src/js_engine_1/demo.js"]);
+},{}]},{},["/home/scott/projects/gamedev/src/js_ecs_engine_1/demo.js"]);
