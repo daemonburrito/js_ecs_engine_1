@@ -30,9 +30,6 @@
 
 	entities.push(player);
 
-	var x = 0, y = 0,
-		forward = true;
-
 	var sync_fns = [
 		function (done) {
 			Object.keys(systems).forEach(function (key) {
