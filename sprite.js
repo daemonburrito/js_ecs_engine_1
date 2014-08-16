@@ -21,10 +21,20 @@
 			this.w, this.h)
 	};
 
+	var build_key = function (args) {
+		return args.sheet.getAttribute('src') + '-' +
+			args.offset_x + '-' +
+			args.offset_y;
+	}
+
 	module.exports = {
 		cache: {},
 		get: function (ctx, sheet, offset_x, offset_y, h, w) {
-			var key = sheet + offset_x + offset_y,
+			var key = build_key({
+				sheet: sheet,
+				offset_x: offset_x,
+				offset_y: offset_y}),
+
 				cached = this.cache[key];
 
 			if (cached) {
@@ -34,6 +44,7 @@
 				this.cache[key] = new Sprite(ctx, sheet, offset_x, offset_y, h, w);
 				return this.cache[key];
 			}
-		}
+		},
+
 	};
 })();
