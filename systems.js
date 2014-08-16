@@ -22,6 +22,37 @@
 			}), this;
 		},
 
+		tileMap: function (entities) {
+			entities.forEach(function (entity) {
+				if (entity.components.tilemap) {
+					var stride = entity.components.tilemap.stride,
+						sprites = entity.components.tilemap.sprites,
+						map = entity.components.tilemap.map,
+
+						sprite,
+						offset_x = 0,
+						offset_y = 0,
+						strip = 1;
+
+					map.forEach(function (v, i) {
+						sprite = sprite_util.get(canvas.ctx, sprites[map[i]].sheet,
+							sprites[map[i]].offset.x, sprites[map[i]].offset.y,
+							sprites[map[i]].h, sprites[map[i]].w);
+						sprite.draw(offset_x, offset_y);
+
+						if (i + 1 >= stride * strip) {
+							strip += 1;
+							offset_x = 0;
+							offset_y += sprites[map[i]].h;
+						}
+						else {
+							offset_x += sprites[map[i]].w;
+						}
+					});
+				}
+			});
+		},
+
 		sprite: function (entities) {
 			entities.forEach(function (entity) {
 				if (entity.components.sprite) {
