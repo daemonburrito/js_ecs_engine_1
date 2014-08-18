@@ -52,7 +52,7 @@
 
 			var T = new Tilemap(def);
 			T.load();
-			instances[T.name] = T;
+			instances[key] = T;
 			return T;
 		}
 	};
