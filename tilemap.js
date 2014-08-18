@@ -2,7 +2,14 @@
 	"use strict";
 	
 	var instances = {},
-		async = require('async');
+		async = require('async'),
+		crypto = require('crypto'),
+
+		hash_key = function (def) {
+			var md5 = crypto.createHash('md5');
+			md5.update(JSON.stringify(def));
+			return md5.digest('hex');
+		};
 
 	// For now, using the JSON output format from Tiled.
 	var Tilemap = function (def, name, prefix) {
@@ -37,8 +44,15 @@
 
 	module.exports = {
 		load: function (def) {
+			var key = hash_key(def);
+
+			if (instances[key]) {
+				return instances[key];
+			}
+
 			var T = new Tilemap(def);
 			T.load();
+			instances[T.name] = T;
 			return T;
 		}
 	};
