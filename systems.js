@@ -25,43 +25,9 @@
 		tileMap: function (entities) {
 			entities.forEach(function (entity) {
 				if (entity.components.tilemap) {
-					var stride = entity.components.tilemap.stride,
-						sprites = entity.components.tilemap.sprites,
-						map = entity.components.tilemap.map,
-
-						sprite,
-						offset_x = 0,
-						offset_y = 0,
-						h = entity.components.tilemap.defaults.h,
-						w = entity.components.tilemap.defaults.w,
-						strip = 1,
+					//console.log(entity.components.tilemap);
+					entity.components.tilemap.layers.forEach(function (v, i) {
 						
-						draw = function (spritedef, x, y) {
-							sprite = sprite_util.get(canvas.ctx, spritedef.sheet,
-							spritedef.offset.x, spritedef.offset.y,
-							spritedef.h, spritedef.w);
-							
-							sprite.draw(x, y);
-						};
-
-					map.forEach(function (v, i) {
-						if (v[1]) {
-							v.forEach(function (j) {
-								draw(sprites[j], offset_x, offset_y);
-							});
-						}
-						else {
-							draw(sprites[map[i]], offset_x, offset_y);
-						}
-
-						if (i + 1 >= stride * strip) {
-							strip += 1;
-							offset_x = 0;
-							offset_y += h;
-						}
-						else {
-							offset_x += w;
-						}
 					});
 				}
 			});
