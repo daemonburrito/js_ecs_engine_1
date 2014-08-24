@@ -93,6 +93,13 @@
 	};
 
 	Tilemap.prototype.get_tile = function (gid) {
+		if (gid === 0) {
+			return {
+				x: null, y: null,
+				h: this.meta.tileheight, w: this.meta.tilewidth
+			}
+		}
+
 		var width = this.tilesets[0].imagewidth,
 			row = Math.ceil((gid * this.meta.tilewidth) / width)
 
@@ -112,11 +119,15 @@
 
 			for (var i=0; i<v.data.length; i++) {
 
-				var tile = this.get_tile(v.data[i]),
-					row = Math.ceil((i + 1) / this.meta.width),
+				var tile = this.get_tile(v.data[i]);
+				if (tile.x === null) {
+					continue
+				}
+
+				var	row = Math.ceil((i + 1) / this.meta.width),
 					x = (i + 1) * tile.w - ((row - 1) * (this.meta.width * tile.w)) - tile.w,
 					y = (row * tile.h) - tile.h + 1;
-				//debugger
+
 				ctx.drawImage(this.tilesets[0].el,
 					tile.x, tile.y,
 					tile.w, tile.h,
