@@ -18,7 +18,7 @@
 			this.offset.x, this.offset.y,
 			this.w, this.h,
 			x, y,
-			this.w, this.h)
+			this.w, this.h);
 	};
 
 	var build_key = function (args) {

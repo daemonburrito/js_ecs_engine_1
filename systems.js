@@ -5,6 +5,7 @@
 		keys = require('./keys'),
 		keypoller = require('./key_poller'),
 		sprite_util = require('./sprite'),
+		tilemap_util = require('./tilemap'),
 
 	systems = {
 		render: function (entities) {
@@ -26,9 +27,12 @@
 			entities.forEach(function (entity) {
 				if (entity.components.tilemap) {
 					//console.log(entity.components.tilemap);
-					entity.components.tilemap.layers.forEach(function (v, i) {
-						
-					});
+					var TM = tilemap_util.load(entity.components.tilemap);
+					TM.draw_all(canvas.ctx);
+					//debugger;
+					//entity.components.tilemap.layers.forEach(function (v, i) {
+					//	
+					//});
 				}
 			});
 		},

@@ -29,3 +29,4 @@ keypoller.is_pressed(32)
 ## `Object.observe()`
 
 We can use `Object.observe()` (or shim) to let systems know when a component that they're interested in has been added, and then remove code that iterates through all entities. It will be an implicit "SystemManager".
+

@@ -1,7 +1,7 @@
 (function () {
 	"use strict";
-	var CANVAS_H = 16 * 16,
-		CANVAS_W = 16 * 16;
+	var CANVAS_H = 16 * 20,
+		CANVAS_W = 16 * 20;
 
 	var el = document.getElementById('demo'),
 		ctx = el.getContext('2d');
