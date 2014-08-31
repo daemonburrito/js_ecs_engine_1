@@ -1,14 +1,16 @@
 // main module
 // game loop, asset loading, etc
-var main = function (pipeline, async_pipeline) {
+module.exports = function (pipeline, async_pipeline) {
 	"use strict";
 	var now, dt, last, context,
 		async = require('async'),
 		keys = require('./keys'),
+		FPSMeter = require('./fpsmeter'),
+		fpsmeter = new FPSMeter(),
 
 		// raf cb
 		frame = function () {
-
+			fpsmeter.tickStart();
 			now = timestamp();
 			dt = (now - last) / 1000,
 
@@ -31,6 +33,7 @@ var main = function (pipeline, async_pipeline) {
 			}, this);
 
 			last = now;
+			fpsmeter.tick();
 
 			// next frame
 			requestAnimationFrame(frame);
@@ -47,4 +50,3 @@ var main = function (pipeline, async_pipeline) {
 	requestAnimationFrame(frame);
 };
 
-module.exports = main;

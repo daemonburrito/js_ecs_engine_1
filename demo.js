@@ -44,6 +44,11 @@
 				systems[key].call(this, entities);
 			});
 			done();
+		},
+
+		function (done) {
+			//debugger;
+			done();
 		}
 	];
 

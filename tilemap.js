@@ -7,7 +7,6 @@
 
 		hash_key = function (def) {
 			return adler32.str(JSON.stringify(def));
-			return hash
 		};
 
 	// For now, using the JSON output format from Tiled.
@@ -28,6 +27,8 @@
 				this.def.tilesets[i].image = prefix + v.image;
 			}, this);
 		}
+
+		return this;
 	};
 
 	Tilemap.prototype.load = function (cb) {
@@ -40,6 +41,8 @@
 		}
 
 		delete this.def;
+
+		return this;
 	};
 
 	Tilemap.prototype.load_meta = function () {
@@ -97,31 +100,31 @@
 			return {
 				x: null, y: null,
 				h: this.meta.tileheight, w: this.meta.tilewidth
-			}
+			};
 		}
 
 		var width = this.tilesets[0].imagewidth,
-			row = Math.ceil((gid * this.meta.tilewidth) / width)
+			row = Math.ceil((gid * this.meta.tilewidth) / width);
 
 		return {
-			x: (gid * this.meta.tilewidth) - ((row - 1) * width) - this.meta.tilewidth ,
-			y: (row * this.meta.tileheight) - this.meta.tileheight ,
+			x: (gid * this.meta.tilewidth) - ((row - 1) * width) - this.meta.tilewidth,
+			y: (row * this.meta.tileheight) - this.meta.tileheight,
 			h: this.meta.tileheight,
 			w: this.meta.tilewidth
-		}
+		};
 	};
 
 	Tilemap.prototype.draw_all = function (ctx) {
 		if (!this.tilesets[0]) {
 			return;
 		}
+
 		this.layers.forEach(function (v) {
 
 			for (var i=0; i<v.data.length; i++) {
-
 				var tile = this.get_tile(v.data[i]);
 				if (tile.x === null) {
-					continue
+					continue;
 				}
 
 				var	row = Math.ceil((i + 1) / this.meta.width),
@@ -146,10 +149,7 @@
 				return instances[key];
 			}
 
-			var T = new Tilemap(def);
-			T.load();
-			instances[key] = T;
-			return T;
+			return instances[key] = new Tilemap(def).load();
 		}
 	};
 })();
