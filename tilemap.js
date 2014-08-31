@@ -143,12 +143,13 @@
 
 	module.exports = {
 		load: function (def) {
-			var key = hash_key(def);
+			var key = def.properties.key || hash_key(def);
 
 			if (instances[key]) {
+				//console.log('cache hit, ' + key);
 				return instances[key];
 			}
-
+			//console.log('cache miss, ' + key);
 			return instances[key] = new Tilemap(def).load();
 		}
 	};

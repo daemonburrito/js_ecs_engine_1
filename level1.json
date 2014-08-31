@@ -25,7 +25,7 @@ module.exports = { "height":20,
  "orientation":"orthogonal",
  "properties":
     {
-
+		"key": "level1"
     },
  "tileheight":16,
  "tilesets":[
