@@ -8,7 +8,13 @@
     "async": "^0.9.0",
     "crypto": "0.0.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "browserify": "^14.1.0",
+    "watchify": "^3.9.0"
+  },
   "author": "daemonburrito",
-  "license": "GPLv3"
+  "license": "GPL-3.0",
+  "scripts": {
+    "watch-demo": "watchify demo.js -o bundle.js"
+  }
 }
