@@ -1,6 +1,6 @@
 # First pass at an ECS engine
 
-See `demo.js` for current usage.
+See `example/demo.js` for current usage.
 
 ## Installation
 
@@ -10,15 +10,23 @@ Just use npm to install dependencies.
 $ npm install
 ```
 
-## Running
+## Running the demo
 
-Just open `index.html` in a browser.
-
-## Browserify
+### Build
 
 ```bash
-$ browserify demo.js -o bundle.js
+$ npm run build-demo
 ```
+
+Or, to play with the demo code:
+
+```bash
+$ npm run watch-demo
+```
+
+### Running
+
+Just open `example/index.html` in a browser.
 
 ## License
 

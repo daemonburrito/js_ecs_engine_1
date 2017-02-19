@@ -15,6 +15,7 @@
   "author": "daemonburrito",
   "license": "GPL-3.0",
   "scripts": {
-    "watch-demo": "watchify demo.js -o bundle.js"
+    "build-demo": "browserify example/demo.js -o example/bundle.js",
+    "watch-demo": "watchify example/demo.js -o example/bundle.js"
   }
 }
