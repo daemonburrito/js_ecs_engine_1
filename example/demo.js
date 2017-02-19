@@ -2,8 +2,9 @@
 	"use strict";
 	var main = require('../main.js'),
 		ecs = require('../ecs'),
-		systems = require('../systems'),
-		canvas = require('../canvas'),
+
+		systems = require('./systems'),
+		canvas = require('./canvas'),
 		entities = [];
 
 	var player = new ecs.Entity('player'),

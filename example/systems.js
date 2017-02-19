@@ -2,17 +2,17 @@
 (function () {
 	"use strict";
 	var canvas = require('./canvas'),
-		keys = require('./keys'),
-		keypoller = require('./key_poller'),
-		sprite_util = require('./sprite'),
-		tilemap_util = require('./tilemap'),
+		keys = require('../keys'),
+		keypoller = require('../key_poller'),
+		sprite_util = require('../paradigms/Tiled2D/sprite'),
+		tilemap_util = require('../paradigms/Tiled2D/tilemap'),
 
 	systems = {
 		render: function (entities) {
 			canvas.ctx.clearRect(0, 0, canvas.h, canvas.w);
 
 			entities.forEach(function (entity) {
-				if (entity.components.size && entity.components.position 
+				if (entity.components.size && entity.components.position
 					&& !entity.components.sprite) {
 					canvas.ctx.fillRect(
 						entity.components.position.x,
@@ -31,7 +31,7 @@
 					TM.draw_all(canvas.ctx);
 					//debugger;
 					//entity.components.tilemap.layers.forEach(function (v, i) {
-					//	
+					//
 					//});
 				}
 			});

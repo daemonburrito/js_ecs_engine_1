@@ -5,12 +5,9 @@ module.exports = function (pipeline, async_pipeline) {
 	var now, dt, last, context,
 		async = require('async'),
 		keys = require('./keys'),
-		FPSMeter = require('./fpsmeter'),
-		fpsmeter = new FPSMeter(),
 
 		// raf cb
 		frame = function () {
-			fpsmeter.tickStart();
 			now = timestamp();
 			dt = (now - last) / 1000,
 
@@ -33,7 +30,6 @@ module.exports = function (pipeline, async_pipeline) {
 			}, this);
 
 			last = now;
-			fpsmeter.tick();
 
 			// next frame
 			requestAnimationFrame(frame);
